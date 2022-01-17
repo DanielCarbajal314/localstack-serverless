@@ -6,9 +6,8 @@ describe('Transform Files', function() {
     it('Should transform big files', () => {
         executeActionOnFile('./test/files/test.jpg', buffer => {
             processImage(buffer)
-                .asBig()
                 .then(file => {
-                    equal(fileSizeIsValid(file), false, 'Big file format is not being generated');
+                    equal(fileSizeIsValid(file.big), false, 'Big file format is not being generated');
                 });
         });
     });
@@ -16,9 +15,8 @@ describe('Transform Files', function() {
     it('Should transform medium files', () => {
         executeActionOnFile('./test/files/test.jpg', buffer => {
             processImage(buffer)
-                .asMedium()
                 .then(file => {
-                    equal(fileSizeIsValid(file), false, 'Medium file format is not being generated');
+                    equal(fileSizeIsValid(file.medium), false, 'Medium file format is not being generated');
                 });
         });
     });
@@ -26,9 +24,8 @@ describe('Transform Files', function() {
     it('Should transform small files', () => {
         executeActionOnFile('./test/files/test.jpg', buffer => {
             processImage(buffer)
-                .asSmall()
                 .then(file => {
-                    equal(fileSizeIsValid(file), false, 'Small file format is not being generated');
+                    equal(fileSizeIsValid(file.small), false, 'Small file format is not being generated');
                 });
         });
     });

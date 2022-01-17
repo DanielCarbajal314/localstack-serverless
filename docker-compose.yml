@@ -7,8 +7,16 @@ services:
       - AWS_DEFAULT_REGION=us-east-1
       - EDGE_PORT=4566
       - SERVICES=lambda,s3,cloudformation,sts,apigateway,iam,route53
+      - HOSTNAME_EXTERNAL=localstack
+      - AWS_ACCESS_KEY_ID=foobar
+      - AWS_SECRET_ACCESS_KEY=foobar
+      - LAMBDA_REMOTE_DOCKER=true
+      - LAMBDA_REMOVE_CONTAINERS=true
+      - LAMBDA_EXECUTOR=docker
+      - PORT_WEB_UI=9090
     ports: 
       - '4566-4597:4566-4597'
+      - '9090:9090'
     volumes: 
       - "${TEMPDIR:-/tmp/localstack}:/temp/localstack"
       - "/var/run/docker.sock:/var/run/docker.sock"

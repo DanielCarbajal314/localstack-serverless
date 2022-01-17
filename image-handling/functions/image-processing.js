@@ -11,12 +11,13 @@ const resizeImage = (data, size) => Sharp(data)
     .toFormat('png')
     .toBuffer();
 
-function processImage(data) {
-    return {
-        asBig: () => resizeImage(data, sizes.big),
-        asMedium: () => resizeImage(data, sizes.medium),
-        asSmall: () => resizeImage(data, sizes.small)
-    };
-}
+const processImage = (data) => Promise.all([
+    resizeImage(data, sizes.big),
+    resizeImage(data, sizes.medium),
+    resizeImage(data, sizes.small)
+]).then(results => {
+    const [ big, medium, small ] = results;
+    return { big, medium, small };
+});
 
 module.exports = { processImage };

@@ -1,6 +1,7 @@
 service: pictures
 plugins:
   - serverless-localstack
+  - serverless-deployment-bucket
 
 custom:
   localstack:
@@ -9,17 +10,51 @@ custom:
      - local
      - dev
     endpointFile: localstack_endpoints.json
+  outputBucket: output-bucket-12345
 
 frameworkVersion: '2'
 
 provider:
   name: aws
   runtime: nodejs12.x
+  deploymentBucket:
+    name: buggy-deploymentbucket
+  lambdaHashingVersion: 20201221
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - s3:PutObject
+        - s3:PutObjectAcl
+      Resource: "arn:aws:s3:::${self:custom.outputBucket}/*"
 
 functions:
   hello:
     handler: handler.hello
+    environment:
+      OUTPUT_BUCKET: ${self:custom.outputBucket}
+      IS_LOCAL_STACK: true,
+      AWS_REGION: us-east-1,
+      LOCALSTACK_EDGE_PORTPORT: 4566
     events:
     - http:
         path: hello
         method: post
+
+resources:
+  Resources:
+    S3BucketOutputs:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:custom.outputBucket}
+        CorsConfiguration:
+          CorsRules:
+            - AllowedOrigins:
+                - '*'
+            - AllowedHeaders:
+                - '*'
+            - AllowedMethods:
+                - GET
+                - PUT
+                - POST
+                - DELETE
+                - HEAD
